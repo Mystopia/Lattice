@@ -13,6 +13,7 @@ import array
 import math
 import time 
 import opc
+import json
 
 import PIL
 from PIL import Image
@@ -50,6 +51,10 @@ sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 # Setup connection to local FadeCandy
 fc = opc.Client('localhost:{}'.format(LOCAL_FADECANDY_PORT))
 
+
+def getSettings(filepath):
+	with open(filepath) as data_file:    
+		return json.load(data_file)
 
 
 def bytesToTuples(data):
@@ -98,6 +103,13 @@ def drawDemoFrame(i):
 
 def main():
 	print >> sys.stderr, '\nMystopia OPC-UDP Receiver'
+	try:
+		settings = getSettings('/boot/hardware-config.json')
+		print settings['multicast']
+	except IOError:
+		print "No settings file found. Proceeding with defaults."
+	
+
 	DEMO_MODE = False
 	i = 0
 
@@ -125,22 +137,6 @@ def main():
 				print 'Timed out - starting demo mode.'
 				DEMO_MODE = True
 
-
-
-'''
-	while True:
-		print drawDemoFrame(0.0)
-		buffer = sock.recv(MESSAGE_SIZE)[3:]    # Discard the 4-byte header
-		image = bufferToImage(buffer)
-		resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)
-		
-		output = bytesToTuples(resized.tobytes())
-		#print("Output " + str(len(output)) + " pixels. ")
-		fc.put_pixels(output);
-		
-		#draw = ImageDraw.Draw(resized)
-		#resized.show()
-'''
 
 if __name__ == "__main__":
 	main()
