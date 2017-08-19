@@ -29,6 +29,8 @@ make submodules && make
 sudo ln -s /etc/supervisor/conf.d/mystopia.ini /boot/supervisord.conf
 sudo cp /boot/supervisord.service /etc/systemd/system/
 alias supervisorctl="supervisorctl -c /boot/supervisord.conf"
+sudo systemctl enable supervisord.service
+sudo systemctl start supervisord.service
 
 
 # Set hostname
