@@ -1,0 +1,36 @@
+Devices and Processes:
+
+Devices:
+	MystopiaRCC.local
+	MystopiaRCCRoof.local
+	MystopiaChandelier01.local
+	MystopiaChandelier02.local
+	MystopiaChandelier03.local
+	MystopiaChandelier04.local
+	MystopiaChandelier05.local
+	MystopiaChandelier06.local
+	MystopiaRCCHat01.local
+	MystopiaRCCHat02.local
+	MystopiaRCCHat03.local
+	MystopiaRCCHat04.local
+	MystopiaRCCHat05.local
+
+Wall Pi: 
+	Processes:
+		FadeCandy server (Mystopia fork)
+			Drives the LED wall directly (and possibly the roof*)
+		RCCControlPanel
+			Touch UI to control power to devices on the RCC
+
+	Optional processes:
+		PixelController - gui to generate wall pixel graphics
+		PxToFC - Send PixelController output to local FadeCandy server
+
+Client Pis: 
+	Processes:
+		FadeCandy server
+		Lattice
+			- LED network receiver
+			- Drives rainbow dmeo pattern otherwise
+
+	Optional:

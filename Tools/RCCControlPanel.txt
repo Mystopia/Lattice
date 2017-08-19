@@ -1,0 +1,47 @@
+RCCControlPanel
+
+Fade candy server
+	- find way to broadcast all data out of fcserver
+		- can do this from pixelcontroller for now 
+		- send as UDP broadcast
+			- wall (unique setup, not sending to own rpi (yet) - send to another local process?)
+			- chandeliers
+			- hats
+			//- pendants - should only get one pixel
+
+
+
+
+
+
+RPi setup:
+	raspbian-jesse
+	pi:rcc5151@RCCControlPanel.local
+
+	Overclocked microsd: 
+		https://www.jeffgeerling.com/blog/2016/how-overclock-microsd-card-reader-on-raspberry-pi-3
+
+	Install current node:
+		http://thisdavej.com/beginners-guide-to-installing-node-js-on-a-raspberry-pi/
+
+
+
+	Misc:
+	Rotated axes for touchscreen: 
+		//https://www.raspberrypi.org/forums/viewtopic.php?p=425962#p425962
+		Install xinput_calibrator: https://www.thingsconnected.io/raspberry-pi-7-inch-touch-screen-calibration/
+		actual Xconf files are in: usr/share/X11/xorg.conf.d
+
+
+	Set RCCControlPanel app to launch at boot in rc.local:
+		https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/
+
+
+
+Boot:
+	Launch PixelController (java -jar P...jar)
+	Launch fadecandy server
+	Launch framebroadcaster
+	//Launch RCCControlPanel app (electron .)
+
+
