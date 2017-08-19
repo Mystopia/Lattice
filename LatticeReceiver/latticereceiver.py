@@ -105,7 +105,6 @@ def main():
 	print >> sys.stderr, '\nMystopia OPC-UDP Receiver'
 	try:
 		settings = getSettings('/boot/hardware-config.json')
-		print settings['multicast']
 	except IOError:
 		print "No settings file found. Proceeding with defaults."
 	
