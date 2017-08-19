@@ -1,4 +1,7 @@
 {
 	"hostname": "MystopiaRCCHat01",
-	"multicastclient": true
+	"multicast": {
+		"isClient": true,
+		"tileOutput": false
+	}
 }

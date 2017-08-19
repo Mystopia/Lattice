@@ -1,4 +1,7 @@
 {
 	"hostname": "MystopiaRCC",
-	"udpclient": true
+	"multicast": {
+		"isClient": false,
+		"tileOutput": false
+	}
 }

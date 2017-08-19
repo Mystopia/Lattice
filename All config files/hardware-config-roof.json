@@ -1,4 +1,7 @@
 {
 	"hostname": "MystopiaRCCRoof",
-	"multicastclient": true
+	"multicast": {
+		"isClient": true,
+		"tileOutput": false
+	}
 }

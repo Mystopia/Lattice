@@ -1,4 +1,10 @@
 {
 	"hostname": "MystopiaRCCChandelier01",
-	"multicastclient": true
+	"multicast": {
+		"isClient": true,
+		"tileOutput": true,
+		"rows": 2,
+		"cols": 3,
+		"thisDevice": 1
+	}
 }
