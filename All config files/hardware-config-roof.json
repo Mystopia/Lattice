@@ -3,5 +3,9 @@
 	"multicast": {
 		"isClient": true,
 		"tileOutput": false
+	},
+	"pixels":{
+		"w":30,
+		"h":10
 	}
 }

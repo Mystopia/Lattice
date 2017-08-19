@@ -6,5 +6,9 @@
 		"rows": 2,
 		"cols": 3,
 		"thisDevice": 1
+	},
+	"pixels":{
+		"w":5,
+		"h":50
 	}
 }
