@@ -59,7 +59,7 @@ def bytesToTuples(data):
 	array = []
 	for x in range(0, len(data)/3):
 		array.append(
-			# Unpack from bytes to decimal groups of three as a time,
+			# Unpack from bytes to decimal groups of three at a time,
 			# returned as a 3-tuple corresponding to (r, g, b):
 			struct.unpack('!BBB', data[(x * 3):(x * 3 + 3)])
 		)
@@ -73,11 +73,10 @@ def scaleImage(image, width, height):
 def bufferToImage(buffer):
 	# Takes a bytearray/buffer (e.g. r, g, b, r, g, b, r, g, b)
 	# and returns a PIL Image.
-	return Image.frombuffer('RGB', (INPUT_FRAME_W, INPUT_FRAME_H), buffer)
+	return Image.frombuffer('RGB', (INPUT_FRAME_W, INPUT_FRAME_H), buffer, 'raw', 'RGB', 0, 1)
 
 
 def imageToBuffer(image):
-	# use image.getdata() or image.tobytes()
 	return image.tobytes()
 
 
@@ -103,29 +102,33 @@ def main():
 	demoMode = False
 	tileOutput = False
 	i = 0
-
 	print >> sys.stderr, '\nMystopia Lattice Receiver'
+
+	# Load settings from hardware-config.json:
 	try:
 		settings = getSettings('/boot/hardware-config.json')
-		#print settings
+
 	except IOError:
 		print "No settings file found. Proceeding with defaults."
+
 	else:
 		OUTPUT_FRAME_W = settings['pixels']['w']
 		OUTPUT_FRAME_H = settings['pixels']['h']
 		if 'tileOutput' in settings['multicast']:
 			tileOutput = settings['multicast']['tileOutput']
 	
+
 	print "Waiting for LED packets from network."
 	while True:
 		if demoMode:
 			frame = drawDemoFrame(i)
+			print "\tDrawing demo pattern to LEDs (" + str(len(frame)) + " pixels)."
 			fc.put_pixels(frame)
 			sock.settimeout(0.3)
 			try:
-				buffer = sock.recv(MESSAGE_SIZE)[3:]    # Discard the 4-byte header
+				buffer = sock.recv(MESSAGE_SIZE)[3:]   # Discard the 4-byte header
 				demoMode = False
-				print 'Demo mode off - starting network mode.'
+				print 'Demo mode off. Switching to network mode.'
 			except socket.timeout:
 				pass
 
@@ -133,50 +136,35 @@ def main():
 			#print 'Waiting for network LED data.'
 			sock.settimeout(TIME_TO_DEMO)
 			try:
-				buffer = sock.recv(MESSAGE_SIZE)[3:]    # Discard the 4-byte header
+				buffer = sock.recv(MESSAGE_SIZE)[3:]   # Discard the 4-byte header
+
 			except socket.timeout:
-				print 'Timed out - starting demo mode.'
+				print 'Network timed out. Switching to demo mode.'
 				demoMode = True
+
 			else:
 				image = bufferToImage(buffer)
-				resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)				
-				output = bytesToTuples(resized.tobytes())
-				#print("Output " + str(len(output)) + " pixels. ")
+				if tileOutput:
+					# crop image to correct fraction and then 
+					# resize to this device's output dimensions
+					tileInputWidth  = int(round(INPUT_FRAME_W / settings['multicast']['cols']))
+					tileInputHeight = int(round(INPUT_FRAME_H / settings['multicast']['rows']))
+					tileOffsetX = (settings['multicast']['myCol'] - 1) * tileInputWidth
+					tileOffsetY = (settings['multicast']['myRow'] - 1) * tileInputHeight
+					croppedImage = image.crop((tileOffsetX, tileOffsetY, tileInputWidth, tileInputHeight))
+					resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)				
+					output = bytesToTuples(resized.tobytes())
+
+				else:
+					resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)				
+					output = bytesToTuples(resized.tobytes())
+
+				print "\tDrawing received pixels to LEDs (" + str(len(output)) + " pixels)."
 				fc.put_pixels(output);
+				# For debugging:
 				#draw = ImageDraw.Draw(resized)
 				#resized.show()
 
 
 if __name__ == "__main__":
 	main()
-
-
-
-
-'''
-Loop:
-		if > time since packet
-			draw a demo frame
-			send demo frame
-		check for recv udp
-		if received
-			restart timer
-			draw packet
-
-
-
-	while True:
-		print drawDemoFrame(0.0)
-		buffer = sock.recv(MESSAGE_SIZE)[3:]    # Discard the 4-byte header
-		image = bufferToImage(buffer)
-		resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)
-		
-		output = bytesToTuples(resized.tobytes())
-		#print("Output " + str(len(output)) + " pixels. ")
-		fc.put_pixels(output);
-		
-		#draw = ImageDraw.Draw(resized)
-		#resized.show()
-
-
-'''
