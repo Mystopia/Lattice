@@ -25,13 +25,8 @@ cd /home/pi/Mystopia/fadecandy/server
 make submodules && make
 
 
-# Set up supervisor
-sudo ln -s /etc/supervisor/conf.d/mystopia.ini /boot/supervisord.conf
-sudo cp /boot/supervisord.service /etc/systemd/system/
-alias supervisorctl="supervisorctl -c /boot/supervisord.conf"
-sudo systemctl enable supervisord.service
-sudo systemctl start supervisord.service
-
+# Set up LXDE autostart
+cp /boot/scripts/autostart /etc/xdg/lxsession/LXDE/autostart
 
 # Set hostname
 #hostn=$(cat /etc/hostname)

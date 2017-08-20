@@ -1,7 +1,0 @@
-{
-	"hostname": "MystopiaRCC",
-	"multicast": {
-		"isClient": false,
-		"tileOutput": false
-	}
-}

@@ -1,0 +1,8 @@
+@lxpanel --profile LXDE
+@pcmanfm --desktop --profile LXDE
+@xscreensaver -no-splash
+@sh /boot/StartFadeCandy.sh
+@sh /boot/StartLatticeReceiver.sh
+@sh /boot/StartPixelController.sh
+@sh /boot/StartPxToFC.sh
+@sh /boot/StartRCCControlPanel.sh

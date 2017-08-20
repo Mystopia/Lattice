@@ -106,7 +106,7 @@ def main():
 
 	# Load settings from hardware-config.json:
 	try:
-		settings = getSettings('/boot/hardware-config.json')
+		settings = getSettings('/boot/configs/hardware-config.json')
 
 	except IOError:
 		print "No settings file found. Proceeding with defaults."
