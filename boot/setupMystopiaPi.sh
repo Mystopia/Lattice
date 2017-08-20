@@ -5,7 +5,7 @@
 # - Sets up supervisord.
 # - Sets new hostname from /boot/hardware-config.json's "hostname" key.
 # - Reboots.
-
+set -ex
 
 # Install base packages
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
@@ -34,7 +34,9 @@ sudo systemctl start supervisord.service
 
 
 # Set hostname
-echo "Existing hostname is $hostn."
+#hostn=$(cat /etc/hostname)
+#echo "Existing hostname is $hostn."
+hostn=`hostname`
 newhost=$(jq '.hostname' /boot/hardware-config.json )
 echo "Changing hostname to $newhost."
 sudo sed -i "s/$hostn/$newhost/g" /etc/hosts
