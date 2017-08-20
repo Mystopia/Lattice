@@ -3,9 +3,10 @@
 	"multicast": {
 		"isClient": true,
 		"tileOutput": true,
-		"rows": 2,
-		"cols": 3,
-		"thisDevice": 1
+		"cols": 2,
+		"rows": 3,
+		"myCol": 2,
+		"myRow": 3
 	},
 	"pixels":{
 		"w":5,
