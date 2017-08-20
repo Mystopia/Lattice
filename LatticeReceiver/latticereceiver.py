@@ -59,7 +59,7 @@ def bytesToTuples(data):
 	array = []
 	for x in range(0, len(data)/3):
 		array.append(
-			# Unpack from bytes to decimal groups of three as a time,
+			# Unpack from bytes to decimal groups of three at a time,
 			# returned as a 3-tuple corresponding to (r, g, b):
 			struct.unpack('!BBB', data[(x * 3):(x * 3 + 3)])
 		)
@@ -77,7 +77,6 @@ def bufferToImage(buffer):
 
 
 def imageToBuffer(image):
-	# use image.getdata() or image.tobytes()
 	return image.tobytes()
 
 
@@ -152,12 +151,6 @@ def main():
 					tileInputHeight = int(round(INPUT_FRAME_H / settings['multicast']['rows']))
 					tileOffsetX = (settings['multicast']['myCol'] - 1) * tileInputWidth
 					tileOffsetY = (settings['multicast']['myRow'] - 1) * tileInputHeight
-					#print("Input W:", INPUT_FRAME_W)
-					#print("Input H:", INPUT_FRAME_H)
-					#print("tileInputWidth:", tileInputWidth)
-					#print("tileInputHeight:", tileInputHeight)
-					#print("tileOffsetX:", tileOffsetX)
-					#print("tileOffsetY:", tileOffsetY)
 					croppedImage = image.crop((tileOffsetX, tileOffsetY, tileInputWidth, tileInputHeight))
 					resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)				
 					output = bytesToTuples(resized.tobytes())
@@ -167,8 +160,8 @@ def main():
 					output = bytesToTuples(resized.tobytes())
 
 				print "\tDrawing received pixels to LEDs (" + str(len(output)) + " pixels)."
-				#print("Output " + str(len(output)) + " pixels. ")
 				fc.put_pixels(output);
+				# For debugging:
 				#draw = ImageDraw.Draw(resized)
 				#resized.show()
 
