@@ -43,7 +43,6 @@ sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind((MCAST_GRP, MCAST_PORT))  # use MCAST_GRP instead of '' to listen only
 									# to MCAST_GRP, not all groups on MCAST_PORT
 mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
-
 sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
 # Setup connection to local FadeCandy
@@ -73,7 +72,8 @@ def scaleImage(image, width, height):
 def bufferToImage(buffer):
 	# Takes a bytearray/buffer (e.g. r, g, b, r, g, b, r, g, b)
 	# and returns a PIL Image.
-	return Image.frombuffer('RGB', (INPUT_FRAME_W, INPUT_FRAME_H), buffer, 'raw', 'RGB', 0, 1)
+	return Image.frombuffer('RGB', (INPUT_FRAME_W, INPUT_FRAME_H), buffer, 
+							'raw', 'RGB', 0, 1)
 
 
 def imageToBuffer(image):
