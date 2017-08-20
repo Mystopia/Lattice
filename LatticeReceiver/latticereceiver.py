@@ -20,11 +20,11 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-DEBUG = True;
+TIME_TO_DEMO = 10
 
 INPUT_FRAME_W = 64;   # Dimensions of the incoming matrix (i.e. LED wall)
 INPUT_FRAME_H = 32;   #
-OUTPUT_FRAME_W = 58;  # Dimensions of the outpu matrix (i.e. chandelier or hat)
+OUTPUT_FRAME_W = 58;  # Dimensions of the output matrix (i.e. chandelier or hat)
 OUTPUT_FRAME_H = 5;   #
 
 MCAST_GRP = '224.0.51.51'
@@ -36,8 +36,6 @@ LOCAL_FADECANDY_PORT = 6789
 # information.
 MESSAGE_HEADER = 4;
 MESSAGE_SIZE = INPUT_FRAME_W * INPUT_FRAME_H *3 + MESSAGE_HEADER; 
-
-DEMO_MODE = False
 
 # Setup to receive UDP Multicast packets
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
@@ -102,39 +100,51 @@ def drawDemoFrame(i):
 
 
 def main():
-	print >> sys.stderr, '\nMystopia OPC-UDP Receiver'
-	try:
-		settings = getSettings('/boot/hardware-config.json')
-	except IOError:
-		print "No settings file found. Proceeding with defaults."
-	
-
-	DEMO_MODE = False
+	demoMode = False
+	tileOutput = False
 	i = 0
 
-	#lastPacketTime = time.time()
-	#print lastPacketTime
-
+	print >> sys.stderr, '\nMystopia Lattice Receiver'
+	try:
+		settings = getSettings('/boot/hardware-config.json')
+		#print settings
+	except IOError:
+		print "No settings file found. Proceeding with defaults."
+	else:
+		OUTPUT_FRAME_W = settings['pixels']['w']
+		OUTPUT_FRAME_H = settings['pixels']['h']
+		if 'tileOutput' in settings['multicast']:
+			tileOutput = settings['multicast']['tileOutput']
+	
+	print "Waiting for LED packets from network."
 	while True:
-		if DEMO_MODE:
+		if demoMode:
 			frame = drawDemoFrame(i)
 			fc.put_pixels(frame)
 			sock.settimeout(0.3)
 			try:
 				buffer = sock.recv(MESSAGE_SIZE)[3:]    # Discard the 4-byte header
-				DEMO_MODE = False
+				demoMode = False
 				print 'Demo mode off - starting network mode.'
 			except socket.timeout:
 				pass
 
 		else:
-			print 'Waiting for network LED data.'
-			sock.settimeout(5)
+			#print 'Waiting for network LED data.'
+			sock.settimeout(TIME_TO_DEMO)
 			try:
 				buffer = sock.recv(MESSAGE_SIZE)[3:]    # Discard the 4-byte header
 			except socket.timeout:
 				print 'Timed out - starting demo mode.'
-				DEMO_MODE = True
+				demoMode = True
+			else:
+				image = bufferToImage(buffer)
+				resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)				
+				output = bytesToTuples(resized.tobytes())
+				#print("Output " + str(len(output)) + " pixels. ")
+				fc.put_pixels(output);
+				#draw = ImageDraw.Draw(resized)
+				#resized.show()
 
 
 if __name__ == "__main__":
@@ -152,5 +162,21 @@ Loop:
 		if received
 			restart timer
 			draw packet
+
+
+
+	while True:
+		print drawDemoFrame(0.0)
+		buffer = sock.recv(MESSAGE_SIZE)[3:]    # Discard the 4-byte header
+		image = bufferToImage(buffer)
+		resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)
+		
+		output = bytesToTuples(resized.tobytes())
+		#print("Output " + str(len(output)) + " pixels. ")
+		fc.put_pixels(output);
+		
+		#draw = ImageDraw.Draw(resized)
+		#resized.show()
+
 
 '''
