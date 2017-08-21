@@ -1,8 +1,11 @@
-@lxpanel --profile LXDE
-@pcmanfm --desktop --profile LXDE
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+
+@lxterminal -e sh /boot/StartFadeCandy.sh
+@lxterminal -e sh /boot/StartLatticeReceiver.sh
+@lxterminal -e sh /boot/StartPixelController.sh
+@lxterminal -e sh /boot/StartPxToFC.sh
+@lxterminal -e sh /boot/StartRCCControlPanel.sh
+
 @xscreensaver -no-splash
-@sh /boot/StartFadeCandy.sh
-@sh /boot/StartLatticeReceiver.sh
-@sh /boot/StartPixelController.sh
-@sh /boot/StartPxToFC.sh
-@sh /boot/StartRCCControlPanel.sh
+@point-rpi
