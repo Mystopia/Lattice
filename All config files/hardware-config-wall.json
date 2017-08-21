@@ -2,6 +2,14 @@
 	"hostname": "MystopiaRCC",
 	"multicast": {
 		"isClient": false,
-		"tileOutput": false
+		"tileOutput": false,
+		"cols": 1,
+		"rows": 1,
+		"myCol": 1,
+		"myRow": 1
+	},
+	"pixels":{
+		"w":64,
+		"h":30
 	}
 }

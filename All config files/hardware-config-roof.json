@@ -2,7 +2,11 @@
 	"hostname": "MystopiaRCCRoof",
 	"multicast": {
 		"isClient": true,
-		"tileOutput": false
+		"tileOutput": false,
+		"cols": 1,
+		"rows": 1,
+		"myCol": 1,
+		"myRow": 1
 	},
 	"pixels":{
 		"w":30,
