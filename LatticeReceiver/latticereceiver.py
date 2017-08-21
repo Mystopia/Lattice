@@ -106,7 +106,7 @@ def main():
 
 	# Load settings from hardware-config.json:
 	try:
-		settings = getSettings('/boot/hardware-config.json')
+		settings = getSettings('/boot/configs/hardware-config.json')
 
 	except IOError:
 		print "No settings file found. Proceeding with defaults."
@@ -151,13 +151,10 @@ def main():
 					tileInputHeight = int(round(INPUT_FRAME_H / settings['multicast']['rows']))
 					tileOffsetX = (settings['multicast']['myCol'] - 1) * tileInputWidth
 					tileOffsetY = (settings['multicast']['myRow'] - 1) * tileInputHeight
-					croppedImage = image.crop((tileOffsetX, tileOffsetY, tileInputWidth, tileInputHeight))
-					resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)				
-					output = bytesToTuples(resized.tobytes())
+					image = image.crop((tileOffsetX, tileOffsetY, tileInputWidth, tileInputHeight))
 
-				else:
-					resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)				
-					output = bytesToTuples(resized.tobytes())
+				resized = scaleImage(image, OUTPUT_FRAME_W, OUTPUT_FRAME_H)				
+				output = bytesToTuples(resized.tobytes())
 
 				print "\tDrawing received pixels to LEDs (" + str(len(output)) + " pixels)."
 				fc.put_pixels(output);
