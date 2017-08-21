@@ -25,4 +25,4 @@ make submodules && make
 
 
 # Set up autostart, hostname
-/boot/SetupMystopiaPi.sh
+#/boot/SetupMystopiaPi.sh
