@@ -6,13 +6,13 @@
 set -ex
 
 # Set up LXDE autostart
-cp /boot/scripts/autostart /etc/xdg/lxsession/LXDE/autostart
+cp /boot/scripts/autostart /home/pi/.config/lxsession/LXDE-pi/autostart
 
 # Set hostname
 #hostn=$(cat /etc/hostname)
 #echo "Existing hostname is $hostn."
 hostn=`hostname`
-newhost=$(jq '.hostname' /boot/configs/hardware-config.json )
+newhost=`jq --raw-output '.hostname' /boot/configs/hardware-config.json`
 echo "Changing hostname to $newhost."
 sudo sed -i "s/$hostn/$newhost/g" /etc/hosts
 sudo sed -i "s/$hostn/$newhost/g" /etc/hostname
